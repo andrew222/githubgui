@@ -16,6 +16,8 @@
 
 package com.githubgui;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -30,6 +32,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,11 +42,14 @@ import com.githubgui.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.githubgui.app.LoginDialog;
+
 /**
  * TODO
  */
 public class MainActivity extends AppCompatActivity {
-
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
     private DrawerLayout mDrawerLayout;
 
     @Override
@@ -70,6 +76,17 @@ public class MainActivity extends AppCompatActivity {
             setupViewPager(viewPager);
         }
 
+        pref = this.getSharedPreferences(LoginDialog.PREF_NAME, Activity.MODE_PRIVATE);
+        editor = pref.edit();
+        String name = pref.getString(LoginDialog.KEY_NAME, null);
+        String password = pref.getString(LoginDialog.KEY_PASSWORD, null);
+        Boolean is_logged_in = pref.getBoolean(LoginDialog.IS_LOGIN, false);
+        if(is_logged_in) {
+            Log.d("TAG", "onCreate " + name);
+            Log.d("TAG", "onCreate " + password);
+        }
+
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
     }
 
     @Override
@@ -113,6 +131,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 menuItem.setChecked(true);
+                String selectItem = menuItem.getTitle().toString();
+                switch (selectItem) {
+                    case "Login":
+                        LoginDialog loginDialog = new LoginDialog();
+                        loginDialog.show(getFragmentManager(), "Login");
+                        break;
+                }
                 mDrawerLayout.closeDrawers();
                 return true;
             }
