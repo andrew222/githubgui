@@ -1,0 +1,38 @@
+ext {
+
+    basePackageName = 'andrew.gradlestuff'
+    resAppColorName = 'build_brand_primary'
+    resAppName = 'build_app_name'
+    fieldShowAds = 'ADS'
+
+
+    paid = [
+
+            packageName: "${basePackageName}.premium",
+            appName : "Gradle Stuff Premium",
+            appColor: "#F44336",
+            showAds : "false",
+            versionName: "2.3.2",
+            versionCode: 4
+    ]
+
+    free = [
+
+            packageName: "${basePackageName}.free",
+            appName : "Gradle Stuff",
+            appColor: "#4CAF50",
+            showAds : "true",
+            versionName: "4.1.1",
+            versionCode: 15
+    ]
+
+    promo = [
+
+            packageName: "${basePackageName}.promo",
+            appName : "Gradle Stuff Demo",
+            appColor: "#9C27B0",
+            showAds : "true",
+            versionName: "1.0",
+            versionCode: 1
+    ]
+}
