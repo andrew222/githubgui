@@ -16,7 +16,7 @@
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.support.android.githubgui">
+    package="com.githubgui">
 
     <application
         android:allowBackup="true"

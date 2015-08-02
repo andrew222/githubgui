@@ -16,7 +16,7 @@
 
 package com.githubgui;
 
-import com.support.android.githubgui.R;
+import com.githubgui.R;
 
 import java.util.Random;
 

@@ -34,7 +34,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.support.android.githubgui.R;
+import com.githubgui.R;
 
 import java.util.ArrayList;
 import java.util.List;
