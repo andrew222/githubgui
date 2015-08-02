@@ -30,6 +30,8 @@ public class LoginDialog extends DialogFragment {
     SharedPreferences pref;
     SharedPreferences.Editor editor;
     Context context;
+    public User currentUser;
+    public AlertDialog.Builder builder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,12 +39,25 @@ public class LoginDialog extends DialogFragment {
         this.context = getActivity().getApplicationContext();
         pref = context.getSharedPreferences(PREF_NAME, Activity.MODE_PRIVATE);
         editor = pref.edit();
+        currentUser = getUserDetails();
+        builder = new AlertDialog.Builder(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Dialog dialog = this.getDialog();
+        EditText name = (EditText) dialog.findViewById(R.id.name_or_email);
+        EditText password = (EditText) dialog.findViewById(R.id.password);
+        if(currentUser != null) {
+            name.setText(currentUser.getName());
+            password.setText(currentUser.getPassword());
+        }
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final LayoutInflater inflater = getActivity().getLayoutInflater();
         String title = getResources().getString(R.string.login_title);
         builder.setView(inflater.inflate(R.layout.login_dialog_layout, null))
@@ -71,10 +86,8 @@ public class LoginDialog extends DialogFragment {
         editor.commit();
     }
 
-    public HashMap<String, String> getUserDetails() {
-        HashMap<String, String> user = new HashMap<String, String>();
-        user.put(KEY_NAME, pref.getString(KEY_NAME, null));
-        user.put(KEY_PASSWORD, pref.getString(KEY_PASSWORD, null));
+    public User getUserDetails() {
+        User user = new User(pref.getString(KEY_NAME, null), pref.getString(KEY_PASSWORD, null));
         return user;
     }
 }
