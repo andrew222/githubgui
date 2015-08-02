@@ -1,6 +1,6 @@
 ext {
 
-    basePackageName = 'andrew.gradlestuff'
+    basePackageName = 'com.githubgui'
     resAppColorName = 'build_brand_primary'
     resAppName = 'build_app_name'
     fieldShowAds = 'ADS'
@@ -8,31 +8,21 @@ ext {
 
     paid = [
 
-            packageName: "${basePackageName}.premium",
-            appName : "Gradle Stuff Premium",
+            packageName: "${basePackageName}.paid",
+            appName : "Github GUI Paid",
             appColor: "#F44336",
             showAds : "false",
-            versionName: "2.3.2",
-            versionCode: 4
+            versionName: "1.0-paid",
+            versionCode: 1
     ]
 
     free = [
 
             packageName: "${basePackageName}.free",
-            appName : "Gradle Stuff",
+            appName : "Github GUI",
             appColor: "#4CAF50",
             showAds : "true",
-            versionName: "4.1.1",
-            versionCode: 15
-    ]
-
-    promo = [
-
-            packageName: "${basePackageName}.promo",
-            appName : "Gradle Stuff Demo",
-            appColor: "#9C27B0",
-            showAds : "true",
-            versionName: "1.0",
+            versionName: "1.0-free",
             versionCode: 1
     ]
 }

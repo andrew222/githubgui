@@ -5,7 +5,7 @@ android {
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "com.support.android.githubgui"
+        applicationId "com.githubgui"
         minSdkVersion 9
         targetSdkVersion 22
         versionCode 1
@@ -16,8 +16,20 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            debuggable true
+        }
     }
     productFlavors {
+        paid {
+            def paid = rootProject.ext.paid
+
+            applicationId paid.packageName
+            buildConfigField 'boolean', fieldShowAds, paid.showAds
+            resValue 'string', resAppName, paid.appName
+            resValue 'color', resAppColorName, paid.appColor
+        }
+
         free {
             def free  = rootProject.ext.free
 
