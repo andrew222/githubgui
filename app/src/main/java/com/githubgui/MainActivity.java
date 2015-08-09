@@ -17,11 +17,8 @@
 package com.githubgui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -39,23 +36,19 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
-import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.githubgui.R;
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.githubgui.app.AsyncAPIRequest;
 import app.githubgui.app.GithubUser;
 import app.githubgui.app.LoginDialog;
 
@@ -92,50 +85,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        pref = getSharedPreferences(LoginDialog.PREF_NAME, Activity.MODE_PRIVATE);
-        editor = pref.edit();
-        String name = pref.getString(LoginDialog.KEY_NAME, null);
-        String password = pref.getString(LoginDialog.KEY_PASSWORD, null);
-        Boolean is_logged_in = pref.getBoolean(LoginDialog.IS_LOGIN, false);
-
-        ImageView avatar = (ImageView) findViewById(R.id.avatar);
-        TextView userNameTv = (TextView) findViewById(R.id.user_name);
-        TextView emailTv = (TextView) findViewById(R.id.email);
-        TextView joinedAtTv = (TextView) findViewById(R.id.joined_at);
-        TextView followsTv = (TextView) findViewById(R.id.follows);
-        TextView followingTv = (TextView) findViewById(R.id.following);
-        if(is_logged_in) {
-            if(userNameTv.getText() == "") {
-                String currentGithubUser = pref.getString(LoginDialog.GITHUB_USER, "");
-                if (currentGithubUser != "") {
-                    GithubUser githubUser = LoginDialog.parseGithubUser(currentGithubUser);
-                    if(githubUser.getName() != userNameTv.getText()) {
-                        userNameTv.setText(githubUser.getName());
-                    }
-                    if(githubUser.getAvatarUrl() != "") {
-                        try {
-                            Picasso.with(getApplicationContext()).load(githubUser.getAvatarUrl()).resize(250, 250).into(avatar);
-                        }catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    if(githubUser.getEmail() != null && githubUser.getEmail() != emailTv.getText()) {
-                        emailTv.setText(Html.fromHtml("<a href=\"mailto:" + githubUser.getEmail() + "\">" + githubUser.getEmail() + "</a>"));
-                        emailTv.setMovementMethod(LinkMovementMethod.getInstance());
-                    }
-                    if(githubUser.getCreatedAt() != joinedAtTv.getText()) {
-                        joinedAtTv.setText(githubUser.getCreatedAt().substring(0, 10));
-                    }
-                    if(githubUser.getFollowers() != followsTv.getText()) {
-                        followsTv.setText(githubUser.getFollowers());
-                    }
-                    if(githubUser.getFollowing() != followingTv.getText()) {
-                        followingTv.setText(githubUser.getFollowing());
-                    }
-                }
-            }
-        }
-
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -148,7 +97,8 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-
+        pref = getSharedPreferences(LoginDialog.PREF_NAME, MODE_PRIVATE);
+        AsyncAPIRequest.fillUserInfo(pref.getString(LoginDialog.GITHUB_USER, ""), pref, this, getApplicationContext());
     }
 
     @Override
@@ -169,29 +119,29 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(new CheeseListFragment(), "Category 1");
-        adapter.addFragment(new CheeseListFragment(), "Category 2");
-        adapter.addFragment(new CheeseListFragment(), "Category 3");
+        adapter.addFragment(new GithubListFragment(), "Category 1");
+        adapter.addFragment(new GithubListFragment(), "Category 2");
+        adapter.addFragment(new GithubListFragment(), "Category 3");
         viewPager.setAdapter(adapter);
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                menuItem.setChecked(true);
-                String selectItem = menuItem.getTitle().toString();
-                switch (selectItem) {
-                    case "Login":
-                        LoginDialog loginDialog = new LoginDialog();
-                        loginDialog.show(getFragmentManager(), "Login");
-                        break;
-                }
-                mDrawerLayout.closeDrawers();
-                return true;
-            }
-        });
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        menuItem.setChecked(true);
+                        String selectItem = menuItem.getTitle().toString();
+                        switch (selectItem) {
+                            case "Login":
+                                LoginDialog loginDialog = new LoginDialog();
+                                loginDialog.show(getFragmentManager(), "Login");
+                                break;
+                        }
+                        mDrawerLayout.closeDrawers();
+                        return true;
+                    }
+                });
     }
 
     static class Adapter extends FragmentPagerAdapter {

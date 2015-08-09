@@ -48,6 +48,7 @@ public class LoginDialog extends DialogFragment {
     SharedPreferences pref;
     SharedPreferences.Editor editor;
     Context context;
+    Activity activity;
     public User currentUser;
     public AlertDialog.Builder builder;
 
@@ -55,6 +56,7 @@ public class LoginDialog extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.context = getActivity().getApplicationContext();
+        this.activity = getActivity();
         pref = context.getSharedPreferences(PREF_NAME, Activity.MODE_PRIVATE);
         editor = pref.edit();
         currentUser = getUserDetails();
@@ -90,7 +92,7 @@ public class LoginDialog extends DialogFragment {
                     if (old_user_name == "" || old_user_name != user_name) {
                         createLoginSession(user_name, passwordET.getText().toString());
                         String url = "https://api.github.com/users/" + user_name;
-                        new HttpAsyncTask().execute(url);
+                        new AsyncAPIRequest(activity).execute(url);
                     }
                 }
             })
@@ -118,59 +120,5 @@ public class LoginDialog extends DialogFragment {
     public static GithubUser parseGithubUser(String json) {
         Gson gson = new Gson();
         return gson.fromJson(json, GithubUser.class);
-    }
-
-    public class HttpAsyncTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... urls) {
-            return Get(urls[0]);
-        }
-
-        @Override
-        protected void onPostExecute(String userInfo) {
-            Log.d("AsyncTask", "onPostExecute :" + userInfo);
-            editor.putString(GITHUB_USER, userInfo);
-//            fillUserInfo(userInfo);
-            editor.commit();
-        }
-    }
-
-    public static String Get(String url) {
-        InputStream inputStream = null;
-        String result = "";
-        try {
-            HttpClient httpClient = new DefaultHttpClient();
-            HttpResponse httpResponse = httpClient.execute(new HttpGet(url));
-            inputStream = httpResponse.getEntity().getContent();
-            if(inputStream != null) {
-                result = convertInputStreamToString(inputStream);
-            } else {
-                result = "Don't work";
-            }
-
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    private static String convertInputStreamToString(InputStream inputStream) throws IOException{
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-        String line = "";
-        String result = "";
-        while((line = bufferedReader.readLine()) != null)
-            result += line;
-
-        inputStream.close();
-        return result;
-    }
-
-//    TODO fill user info at nav header
-    public void fillUserInfo(String userInfo) {
-        Gson gson = new Gson();
-        GithubUser user = gson.fromJson(userInfo, GithubUser.class);
-
-        TextView email = (TextView) rootView.findViewById(R.id.email);
-        email.setText(Html.fromHtml("<a href=\"mailto:" + user.getEmail() + "\">" + user.getEmail() + "</a>"));
     }
 }

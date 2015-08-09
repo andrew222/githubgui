@@ -20,7 +20,7 @@ import com.githubgui.R;
 
 import java.util.Random;
 
-public class Cheeses {
+public class GithubLists {
 
     private static final Random RANDOM = new Random();
 
@@ -53,7 +53,7 @@ public class Cheeses {
             "Bergader", "Bergere Bleue", "Berkswell", "Beyaz Peynir", "Bierkase", "Bishop Kennedy",
             "Blarney", "Bleu d'Auvergne", "Bleu de Gex", "Bleu de Laqueuille",
             "Bleu de Septmoncel", "Bleu Des Causses", "Blue", "Blue Castello", "Blue Rathgore",
-            "Blue Vein (Australian)", "Blue Vein Cheeses", "Bocconcini", "Bocconcini (Australian)",
+            "Blue Vein (Australian)", "Blue Vein GithubLists", "Bocconcini", "Bocconcini (Australian)",
             "Boeren Leidenkaas", "Bonchester", "Bosworth", "Bougon", "Boule Du Roves",
             "Boulette d'Avesnes", "Boursault", "Boursin", "Bouyssou", "Bra", "Braudostur",
             "Breakfast Cheese", "Brebis du Lavort", "Brebis du Lochois", "Brebis du Puyfaucon",
@@ -115,12 +115,12 @@ public class Cheeses {
             "Livarot", "Llanboidy", "Llanglofan Farmhouse", "Loch Arthur Farmhouse",
             "Loddiswell Avondale", "Longhorn", "Lou Palou", "Lou Pevre", "Lyonnais", "Maasdam",
             "Macconais", "Mahoe Aged Gouda", "Mahon", "Malvern", "Mamirolle", "Manchego",
-            "Manouri", "Manur", "Marble Cheddar", "Marbled Cheeses", "Maredsous", "Margotin",
+            "Manouri", "Manur", "Marble Cheddar", "Marbled GithubLists", "Maredsous", "Margotin",
             "Maribo", "Maroilles", "Mascares", "Mascarpone", "Mascarpone (Australian)",
             "Mascarpone Torta", "Matocq", "Maytag Blue", "Meira", "Menallack Farmhouse",
             "Menonita", "Meredith Blue", "Mesost", "Metton (Cancoillotte)", "Meyer Vintage Gouda",
             "Mihalic Peynir", "Milleens", "Mimolette", "Mine-Gabhar", "Mini Baby Bells", "Mixte",
-            "Molbo", "Monastery Cheeses", "Mondseer", "Mont D'or Lyonnais", "Montasio",
+            "Molbo", "Monastery GithubLists", "Mondseer", "Mont D'or Lyonnais", "Montasio",
             "Monterey Jack", "Monterey Jack Dry", "Morbier", "Morbier Cru de Montagne",
             "Mothais a la Feuille", "Mozzarella", "Mozzarella (Australian)",
             "Mozzarella di Bufala", "Mozzarella Fresh, in water", "Mozzarella Rolls", "Munster",

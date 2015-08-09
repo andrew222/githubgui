@@ -25,7 +25,6 @@ import android.view.Menu;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.githubgui.R;
 
 public class CheeseDetailActivity extends AppCompatActivity {
 
@@ -52,7 +51,7 @@ public class CheeseDetailActivity extends AppCompatActivity {
 
     private void loadBackdrop() {
         final ImageView imageView = (ImageView) findViewById(R.id.backdrop);
-        Glide.with(this).load(Cheeses.getRandomCheeseDrawable()).centerCrop().into(imageView);
+        Glide.with(this).load(GithubLists.getRandomCheeseDrawable()).centerCrop().into(imageView);
     }
 
     @Override
