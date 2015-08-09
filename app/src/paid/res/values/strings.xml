@@ -3,4 +3,5 @@
     <string name="login_title">Login</string>
     <string name="name_or_email">User name or email</string>
     <string name="password">Password</string>
+    <string name="set_user">Set User</string>
 </resources>

@@ -18,6 +18,10 @@ package com.githubgui;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -32,16 +36,27 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.githubgui.R;
+import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.githubgui.app.GithubUser;
 import app.githubgui.app.LoginDialog;
 
 /**
@@ -76,14 +91,49 @@ public class MainActivity extends AppCompatActivity {
             setupViewPager(viewPager);
         }
 
-        pref = this.getSharedPreferences(LoginDialog.PREF_NAME, Activity.MODE_PRIVATE);
+
+        pref = getSharedPreferences(LoginDialog.PREF_NAME, Activity.MODE_PRIVATE);
         editor = pref.edit();
         String name = pref.getString(LoginDialog.KEY_NAME, null);
         String password = pref.getString(LoginDialog.KEY_PASSWORD, null);
         Boolean is_logged_in = pref.getBoolean(LoginDialog.IS_LOGIN, false);
+
+        ImageView avatar = (ImageView) findViewById(R.id.avatar);
+        TextView userNameTv = (TextView) findViewById(R.id.user_name);
+        TextView emailTv = (TextView) findViewById(R.id.email);
+        TextView joinedAtTv = (TextView) findViewById(R.id.joined_at);
+        TextView followsTv = (TextView) findViewById(R.id.follows);
+        TextView followingTv = (TextView) findViewById(R.id.following);
         if(is_logged_in) {
-            Log.d("TAG", "onCreate " + name);
-            Log.d("TAG", "onCreate " + password);
+            if(userNameTv.getText() == "") {
+                String currentGithubUser = pref.getString(LoginDialog.GITHUB_USER, "");
+                if (currentGithubUser != "") {
+                    GithubUser githubUser = LoginDialog.parseGithubUser(currentGithubUser);
+                    if(githubUser.getName() != userNameTv.getText()) {
+                        userNameTv.setText(githubUser.getName());
+                    }
+                    if(githubUser.getAvatarUrl() != "") {
+                        try {
+                            Picasso.with(getApplicationContext()).load(githubUser.getAvatarUrl()).resize(250, 250).into(avatar);
+                        }catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if(githubUser.getEmail() != null && githubUser.getEmail() != emailTv.getText()) {
+                        emailTv.setText(Html.fromHtml("<a href=\"mailto:" + githubUser.getEmail() + "\">" + githubUser.getEmail() + "</a>"));
+                        emailTv.setMovementMethod(LinkMovementMethod.getInstance());
+                    }
+                    if(githubUser.getCreatedAt() != joinedAtTv.getText()) {
+                        joinedAtTv.setText(githubUser.getCreatedAt().substring(0, 10));
+                    }
+                    if(githubUser.getFollowers() != followsTv.getText()) {
+                        followsTv.setText(githubUser.getFollowers());
+                    }
+                    if(githubUser.getFollowing() != followingTv.getText()) {
+                        followingTv.setText(githubUser.getFollowing());
+                    }
+                }
+            }
         }
 
 
