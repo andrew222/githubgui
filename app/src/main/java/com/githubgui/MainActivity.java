@@ -40,6 +40,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -84,8 +85,6 @@ public class MainActivity extends AppCompatActivity {
             setupViewPager(viewPager);
         }
 
-
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,9 +118,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(new GithubListFragment(), "Category 1");
-        adapter.addFragment(new GithubListFragment(), "Category 2");
-        adapter.addFragment(new GithubListFragment(), "Category 3");
+        adapter.addFragment(new GithubListFragment(), "Repositories");
+        adapter.addFragment(new GithubListFragment(), "Stars");
+        adapter.addFragment(new GithubListFragment(), "Activities");
         viewPager.setAdapter(adapter);
     }
 
@@ -147,14 +146,42 @@ public class MainActivity extends AppCompatActivity {
     static class Adapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragments = new ArrayList<>();
         private final List<String> mFragmentTitles = new ArrayList<>();
+        private Fragment mCurrentFragment;
 
         public Adapter(FragmentManager fm) {
             super(fm);
         }
 
+        public Fragment getCurrentFragment() {
+            return mCurrentFragment;
+        }
         public void addFragment(Fragment fragment, String title) {
             mFragments.add(fragment);
             mFragmentTitles.add(title);
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            Log.d("TAG", "getItemPosition " + super.getItemPosition(object));
+            return super.getItemPosition(object);
+        }
+
+        @Override
+        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+            switch (position) {
+                case 0:
+                    Log.d("TAG", "setPrimaryItem " + "Repositories");
+
+                case 1:
+                    Log.d("TAG", "setPrimaryItem " + "Stars");
+                case 2:
+                    Log.d("TAG", "setPrimaryItem " + "Activities");
+
+            }
+            if(getCurrentFragment() != object) {
+                mCurrentFragment = ((Fragment) object);
+            }
+            super.setPrimaryItem(container, position, object);
         }
 
         @Override

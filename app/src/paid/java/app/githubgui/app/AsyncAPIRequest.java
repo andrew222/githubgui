@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -131,6 +134,8 @@ public class AsyncAPIRequest extends AsyncTask<String, Void, String> {
                 if(githubUser.getFollowing() != followingTv.getText()) {
                     followingTv.setText(githubUser.getFollowing());
                 }
+                ViewPager viewPager = (ViewPager) mActivity.findViewById(R.id.viewpager);
+                PagerAdapter adapter = viewPager.getAdapter();
             }
         }
     }

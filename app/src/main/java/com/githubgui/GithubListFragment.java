@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -37,6 +38,14 @@ import java.util.List;
 import java.util.Random;
 
 public class GithubListFragment extends Fragment {
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser) {
+            Toast.makeText(getActivity().getApplicationContext(), "is Visible to user", Toast.LENGTH_LONG).show();
+        }
+    }
 
     @Nullable
     @Override
