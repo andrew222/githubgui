@@ -28,6 +28,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 /**
  * Created by andrewyang on 2015/8/9.
@@ -58,18 +59,19 @@ public class AsyncAPIRequest extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected void onPostExecute(String userInfo) {
+    protected void onPostExecute(String response) {
         switch (mRequestType) {
             case "repos":
-                editor.putString(LoginDialog.GITHUB_REPOS, userInfo);
-                Log.d("TAG", "Github repos: " + userInfo);
+                editor.putString(LoginDialog.GITHUB_REPOS, response);
+                Log.d("TAG", "onPostExecute " + response);
+                fillRepos(response, pref, mActivity, mContext);
                 break;
             default:
-                editor.putString(LoginDialog.GITHUB_USER, userInfo);
+                editor.putString(LoginDialog.GITHUB_USER, response);
                 break;
         }
         editor.commit();
-        fillUserInfo(userInfo, pref, mActivity, mContext);
+        fillUserInfo(response, pref, mActivity, mContext);
     }
 
     public String Get(String url) {
@@ -148,6 +150,13 @@ public class AsyncAPIRequest extends AsyncTask<String, Void, String> {
 
 
             }
+        }
+    }
+
+    public void fillRepos(String repos, SharedPreferences pref, Activity mActivity, Context mContext) {
+        ArrayList<GithubRepositories> reposObjs = LoginDialog.parseGithubRepos(repos);
+        for(GithubRepositories rep : reposObjs) {
+            Log.d("TAG", "fillRepos :" + rep.getDescription());
         }
     }
 }

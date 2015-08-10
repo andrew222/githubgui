@@ -22,6 +22,7 @@ import com.githubgui.MainActivity;
 import com.githubgui.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -32,7 +33,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by andrewyang on 2015/8/2.
@@ -121,5 +125,10 @@ public class LoginDialog extends DialogFragment {
     public static GithubUser parseGithubUser(String json) {
         Gson gson = new Gson();
         return gson.fromJson(json, GithubUser.class);
+    }
+    public static ArrayList<GithubRepositories> parseGithubRepos(String json) {
+        Type listOfGithubRepositories = new TypeToken<List<GithubRepositories>>(){}.getType();
+        Gson gson = new Gson();
+        return gson.fromJson(json,listOfGithubRepositories);
     }
 }
