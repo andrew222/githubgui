@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         if (viewPager != null) {
-            setupViewPager(viewPager);
+            setupViewPager(viewPager, this);
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -116,8 +116,8 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void setupViewPager(ViewPager viewPager) {
-        Adapter adapter = new Adapter(getSupportFragmentManager());
+    private void setupViewPager(ViewPager viewPager, Activity activity) {
+        Adapter adapter = new Adapter(getSupportFragmentManager(), activity);
         adapter.addFragment(new GithubListFragment(), "Repositories");
         adapter.addFragment(new GithubListFragment(), "Stars");
         adapter.addFragment(new GithubListFragment(), "Activities");
@@ -146,15 +146,13 @@ public class MainActivity extends AppCompatActivity {
     static class Adapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragments = new ArrayList<>();
         private final List<String> mFragmentTitles = new ArrayList<>();
-        private Fragment mCurrentFragment;
+        private Activity mActivity;
 
-        public Adapter(FragmentManager fm) {
+        public Adapter(FragmentManager fm, Activity activity ) {
             super(fm);
+            this.mActivity = activity;
         }
 
-        public Fragment getCurrentFragment() {
-            return mCurrentFragment;
-        }
         public void addFragment(Fragment fragment, String title) {
             mFragments.add(fragment);
             mFragmentTitles.add(title);
@@ -171,15 +169,16 @@ public class MainActivity extends AppCompatActivity {
             switch (position) {
                 case 0:
                     Log.d("TAG", "setPrimaryItem " + "Repositories");
+                    new AsyncAPIRequest(mActivity, "repos").execute("https://api.github.com/users/andrew222/repos");
+                    break;
 
                 case 1:
                     Log.d("TAG", "setPrimaryItem " + "Stars");
+                    break;
                 case 2:
                     Log.d("TAG", "setPrimaryItem " + "Activities");
+                    break;
 
-            }
-            if(getCurrentFragment() != object) {
-                mCurrentFragment = ((Fragment) object);
             }
             super.setPrimaryItem(container, position, object);
         }

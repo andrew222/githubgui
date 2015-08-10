@@ -38,10 +38,12 @@ public class AsyncAPIRequest extends AsyncTask<String, Void, String> {
     SharedPreferences.Editor editor;
     private Context mContext;
     private Activity mActivity;
+    private String mRequestType;
 
-    public AsyncAPIRequest(Activity activity) {
+    public AsyncAPIRequest(Activity activity, String requestType) {
         this.mActivity = activity;
         this.mContext = activity.getApplicationContext();
+        this.mRequestType = requestType;
     }
 
     @Override
@@ -57,8 +59,15 @@ public class AsyncAPIRequest extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String userInfo) {
-        Log.d("AsyncTask", "onPostExecute :" + userInfo);
-        editor.putString(LoginDialog.GITHUB_USER, userInfo);
+        switch (mRequestType) {
+            case "repos":
+                editor.putString(LoginDialog.GITHUB_REPOS, userInfo);
+                Log.d("TAG", "Github repos: " + userInfo);
+                break;
+            default:
+                editor.putString(LoginDialog.GITHUB_USER, userInfo);
+                break;
+        }
         editor.commit();
         fillUserInfo(userInfo, pref, mActivity, mContext);
     }
@@ -136,6 +145,8 @@ public class AsyncAPIRequest extends AsyncTask<String, Void, String> {
                 }
                 ViewPager viewPager = (ViewPager) mActivity.findViewById(R.id.viewpager);
                 PagerAdapter adapter = viewPager.getAdapter();
+
+
             }
         }
     }

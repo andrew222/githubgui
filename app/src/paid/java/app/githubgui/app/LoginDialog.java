@@ -43,6 +43,7 @@ public class LoginDialog extends DialogFragment {
     public static final String KEY_NAME = "name_or_email";
     public static final String KEY_PASSWORD = "password";
     public static final String GITHUB_USER = "current_github_user";
+    public static final String GITHUB_REPOS = "repos";
     public View rootView;
 
     SharedPreferences pref;
@@ -92,7 +93,7 @@ public class LoginDialog extends DialogFragment {
                     if (old_user_name == "" || old_user_name != user_name) {
                         createLoginSession(user_name, passwordET.getText().toString());
                         String url = "https://api.github.com/users/" + user_name;
-                        new AsyncAPIRequest(activity).execute(url);
+                        new AsyncAPIRequest(activity, "").execute(url);
                     }
                 }
             })
