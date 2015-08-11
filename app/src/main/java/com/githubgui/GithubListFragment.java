@@ -16,8 +16,10 @@
 
 package com.githubgui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -37,13 +39,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import app.githubgui.app.GithubRepositories;
+import app.githubgui.app.LoginDialog;
+
 public class GithubListFragment extends Fragment {
+    private Activity mActivity;
+    private SharedPreferences pref;
+    private SharedPreferences.Editor editor;
+    private ArrayList<GithubRepositories> reposObjs;
+    private String fragmentTyep;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.mActivity = getActivity();
+        this.pref = mActivity.getSharedPreferences(LoginDialog.PREF_NAME, Activity.MODE_PRIVATE);
+        this.editor = pref.edit();
+        reposObjs = LoginDialog.parseGithubRepos(pref.getString(LoginDialog.GITHUB_REPOS, ""));
+    }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if(isVisibleToUser) {
-            Toast.makeText(getActivity().getApplicationContext(), "is Visible to user", Toast.LENGTH_LONG).show();
+            Toast.makeText(mActivity.getApplicationContext(), "is Visible to user", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -59,14 +77,29 @@ public class GithubListFragment extends Fragment {
     private void setupRecyclerView(RecyclerView recyclerView) {
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
         recyclerView.setAdapter(new SimpleStringRecyclerViewAdapter(getActivity(),
-                getRandomSublist(GithubLists.sCheeseStrings, 30)));
+                getRandomSublist()));
     }
 
-    private List<String> getRandomSublist(String[] array, int amount) {
-        ArrayList<String> list = new ArrayList<>(amount);
-        Random random = new Random();
-        while (list.size() < amount) {
-            list.add(array[random.nextInt(array.length)]);
+    private List<String> getRandomSublist() {
+        ArrayList<String> list = new ArrayList<>();
+        Bundle bundle = this.getArguments();
+        fragmentTyep = bundle.getString("type", "");
+        switch (fragmentTyep) {
+            case "Repositories":
+                for (GithubRepositories repo : reposObjs) {
+                    list.add(repo.getName());
+                }
+                break;
+            case "Stars":
+                for (GithubRepositories repo : reposObjs) {
+                    list.add(repo.getFullName());
+                }
+                break;
+            case "Activities":
+                for (GithubRepositories repo : reposObjs) {
+                    list.add(String.valueOf(repo.getReposId()));
+                }
+                break;
         }
         return list;
     }

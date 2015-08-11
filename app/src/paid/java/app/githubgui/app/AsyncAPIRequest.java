@@ -80,7 +80,11 @@ public class AsyncAPIRequest extends AsyncTask<String, Void, String> {
         String result = "";
         try {
             HttpClient httpClient = new DefaultHttpClient();
-            HttpResponse httpResponse = httpClient.execute(new HttpGet(url));
+            HttpGet httpGet = new HttpGet(url);
+            if(mRequestType == "stars") {
+                httpGet.addHeader("Accept", "application/vnd.github.v3.star+json");
+            }
+            HttpResponse httpResponse = httpClient.execute(httpGet);
             inputStream = httpResponse.getEntity().getContent();
             if (inputStream != null) {
                 result = convertInputStreamToString(inputStream);
@@ -136,7 +140,7 @@ public class AsyncAPIRequest extends AsyncTask<String, Void, String> {
                     emailTv.setText(Html.fromHtml("<a href=\"mailto:" + githubUser.getEmail() + "\">" + githubUser.getEmail() + "</a>"));
                     emailTv.setMovementMethod(LinkMovementMethod.getInstance());
                 }
-                if(githubUser.getCreatedAt() != joinedAtTv.getText()) {
+                if(githubUser.getCreatedAt() != joinedAtTv.getText() && githubUser.getCreatedAt() != null) {
                     joinedAtTv.setText(githubUser.getCreatedAt().substring(0, 10));
                 }
                 if(githubUser.getFollowers() != followsTv.getText()) {

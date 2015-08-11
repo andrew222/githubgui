@@ -118,9 +118,21 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager, Activity activity) {
         Adapter adapter = new Adapter(getSupportFragmentManager(), activity);
-        adapter.addFragment(new GithubListFragment(), "Repositories");
-        adapter.addFragment(new GithubListFragment(), "Stars");
-        adapter.addFragment(new GithubListFragment(), "Activities");
+        GithubListFragment reposFragment = new GithubListFragment();
+        Bundle reposBundle = new Bundle();
+        reposBundle.putString("type", "Repositories");
+        reposFragment.setArguments(reposBundle);
+        adapter.addFragment(reposFragment, "Repositories");
+        Bundle starsBundle = new Bundle();
+        starsBundle.putString("type", "Stars");
+        GithubListFragment starsFragment = new GithubListFragment();
+        starsFragment.setArguments(starsBundle);
+        adapter.addFragment(starsFragment, "Stars");
+        Bundle ActivitiesBundle = new Bundle();
+        ActivitiesBundle.putString("type", "Activities");
+        GithubListFragment activitiesFragment = new GithubListFragment();
+        activitiesFragment.setArguments(ActivitiesBundle);
+        adapter.addFragment(activitiesFragment, "Activities");
         viewPager.setAdapter(adapter);
     }
 
@@ -174,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
 
                 case 1:
                     Log.d("TAG", "setPrimaryItem " + "Stars");
+                    new AsyncAPIRequest(mActivity, "stars").execute("https://api.github.com/users/andrew222/starred");
                     break;
                 case 2:
                     Log.d("TAG", "setPrimaryItem " + "Activities");
