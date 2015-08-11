@@ -66,6 +66,10 @@ public class AsyncAPIRequest extends AsyncTask<String, Void, String> {
                 Log.d("TAG", "onPostExecute " + response);
                 fillRepos(response, pref, mActivity, mContext);
                 break;
+            case "stars":
+                editor.putString(LoginDialog.GITHUB_STARS, response);
+                Log.d("TAG", "onPostExecute " + response);
+                fillStars(response, pref, mActivity, mContext);
             default:
                 editor.putString(LoginDialog.GITHUB_USER, response);
                 break;
@@ -151,8 +155,6 @@ public class AsyncAPIRequest extends AsyncTask<String, Void, String> {
                 }
                 ViewPager viewPager = (ViewPager) mActivity.findViewById(R.id.viewpager);
                 PagerAdapter adapter = viewPager.getAdapter();
-
-
             }
         }
     }
@@ -161,6 +163,13 @@ public class AsyncAPIRequest extends AsyncTask<String, Void, String> {
         ArrayList<GithubRepositories> reposObjs = LoginDialog.parseGithubRepos(repos);
         for(GithubRepositories rep : reposObjs) {
             Log.d("TAG", "fillRepos :" + rep.getDescription());
+        }
+    }
+
+    public void fillStars(String repos, SharedPreferences pref, Activity mActivity, Context mContext) {
+        ArrayList<GithubStarred> starsObjs = LoginDialog.parseGithubStars(repos);
+        for(GithubStarred rep : starsObjs) {
+            Log.d("TAG", "fillRepos :" + rep.getStarredAt());
         }
     }
 }

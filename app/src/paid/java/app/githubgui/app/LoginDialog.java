@@ -48,6 +48,7 @@ public class LoginDialog extends DialogFragment {
     public static final String KEY_PASSWORD = "password";
     public static final String GITHUB_USER = "current_github_user";
     public static final String GITHUB_REPOS = "repos";
+    public static final String GITHUB_STARS = "stars";
     public View rootView;
 
     SharedPreferences pref;
@@ -130,5 +131,11 @@ public class LoginDialog extends DialogFragment {
         Type listOfGithubRepositories = new TypeToken<List<GithubRepositories>>(){}.getType();
         Gson gson = new Gson();
         return gson.fromJson(json,listOfGithubRepositories);
+    }
+
+    public static ArrayList<GithubStarred> parseGithubStars(String json) {
+        Type listOfGithubStars = new TypeToken<List<GithubStarred>>(){}.getType();
+        Gson gson = new Gson();
+        return gson.fromJson(json,listOfGithubStars);
     }
 }
