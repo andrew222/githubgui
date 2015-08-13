@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -50,6 +51,7 @@ public class LoginDialog extends DialogFragment {
     public static final String GITHUB_REPOS = "repos";
     public static final String GITHUB_STARS = "stars";
     public View rootView;
+    public ProgressDialog proDialog;
 
     SharedPreferences pref;
     SharedPreferences.Editor editor;
@@ -95,10 +97,13 @@ public class LoginDialog extends DialogFragment {
                     String user_name = nameET.getText().toString();
                     String old_user_name = pref.getString(KEY_NAME, "");
                     EditText passwordET = (EditText) dialogView.findViewById(R.id.password);
-                    if (old_user_name == "" || old_user_name != user_name) {
+                    if (user_name != "" && old_user_name != user_name) {
                         createLoginSession(user_name, passwordET.getText().toString());
                         String url = "https://api.github.com/users/" + user_name;
                         new AsyncAPIRequest(activity, "").execute(url);
+
+                        proDialog = new ProgressDialog(activity);
+                        proDialog.show();
                     }
                 }
             })

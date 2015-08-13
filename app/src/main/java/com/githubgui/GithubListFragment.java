@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Random;
 
 import app.githubgui.app.GithubRepositories;
+import app.githubgui.app.GithubStarred;
 import app.githubgui.app.LoginDialog;
 
 public class GithubListFragment extends Fragment {
@@ -47,6 +48,7 @@ public class GithubListFragment extends Fragment {
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
     private ArrayList<GithubRepositories> reposObjs;
+    private ArrayList<GithubStarred> starsObjs;
     private String fragmentTyep;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +57,7 @@ public class GithubListFragment extends Fragment {
         this.pref = mActivity.getSharedPreferences(LoginDialog.PREF_NAME, Activity.MODE_PRIVATE);
         this.editor = pref.edit();
         reposObjs = LoginDialog.parseGithubRepos(pref.getString(LoginDialog.GITHUB_REPOS, ""));
+        starsObjs = LoginDialog.parseGithubStars(pref.getString(LoginDialog.GITHUB_STARS, ""));
     }
 
     @Override
@@ -86,18 +89,24 @@ public class GithubListFragment extends Fragment {
         fragmentTyep = bundle.getString("type", "");
         switch (fragmentTyep) {
             case "Repositories":
-                for (GithubRepositories repo : reposObjs) {
-                    list.add(repo.getName());
+                if(reposObjs != null) {
+                    for (GithubRepositories repo : reposObjs) {
+                        list.add(repo.getName());
+                    }
                 }
                 break;
             case "Stars":
-                for (GithubRepositories repo : reposObjs) {
-                    list.add(repo.getFullName());
+                if(starsObjs != null) {
+                    for (GithubStarred star : starsObjs) {
+                        list.add(star.getStarredAt());
+                    }
                 }
                 break;
             case "Activities":
-                for (GithubRepositories repo : reposObjs) {
-                    list.add(String.valueOf(repo.getReposId()));
+                if(reposObjs != null) {
+                    for (GithubRepositories repo : reposObjs) {
+                        list.add(String.valueOf(repo.getReposId()));
+                    }
                 }
                 break;
         }
